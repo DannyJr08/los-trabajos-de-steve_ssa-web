@@ -1,6 +1,15 @@
 import React from 'react';
 
 function Login(){
+    const form = document.querySelector("form")
+
+        form.addEventListener('submit', e => {
+            if (!form.checkValidity()) {
+                e.preventDefault()
+            }
+
+            form.classNameList.add('was-validated')
+        })
     return (
         <div className="container w-80 bg-primary mt-3 mb-3 rounded shadow">
         <div className="row align-items-stretch">
