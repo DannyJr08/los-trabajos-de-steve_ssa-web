@@ -6,6 +6,11 @@ nav {
     background: #556FCC;
 }
 
+#back-btn {
+    border: none;
+    filter: opacity(0.4) drop-shadow(0 0 0 rgb(132, 0, 255));   
+}
+
 #bell {
     border: none;
 }
@@ -37,20 +42,11 @@ nav {
     border: none;
 }
 
-#p-title {
+.p-title {
     color: #7A28FF;
     font-weight: 750;
-    font-size: 75px;
+    font-size: 110px;
     font-style: bold;
-}
-
-.card-body {
-    background-color: #869FF2;
-    border-radius: 25px;
-}
-
-.c-title {
-    font-size: 50px;
 }
 
 #c-datos {
@@ -60,4 +56,13 @@ nav {
 
 #plus {
     border: none;
+}
+
+.effect {
+    cursor: pointer;
+    transition: all ease-out 0.2s;
+}
+
+.effect:hover {
+    transform: scale(1.05);
 }
