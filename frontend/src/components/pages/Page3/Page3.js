@@ -67,8 +67,8 @@ function Page3(){
                             </div>
                             <div className="col col-md py-4">
                                 <div className="row justify-content-center align-items-center px-1 py-3">
-                                    <div className="col-9 rounded-2 align-self-start p-3" style={{backgroundColor: '#869FF2'}}>
-                                        <h2 className="text-light fw-bold text-start" style={{fontWeight: '750px', fontSize: '38px'}}>Alberto Horacio Orozco Ramos</h2>
+                                    <div className="col-9 rounded-2 align-self-start p-3" style={{backgroundColor: '#869FF2', width: 'auto'}}>
+                                        <h2 className="text-light fw-bold text-start" style={{fontWeight: '750px', fontSize: '40px'}}>Alberto Horacio Orozco Ramos</h2>
                                     </div>
                                     <div className="col">
                                         <img src="./images/cara-seria.png" alt="" className="img-fluid float-end" style={{width: '150px'}}/>
@@ -105,8 +105,8 @@ function Page3(){
                             </div>
                             <div className="col col-md py-4">
                                 <div className="row justify-content-center align-items-center px-1 py-3">
-                                    <div className="col-9 rounded-2 align-self-start p-3" style={{backgroundColor: '#869FF2'}}>
-                                        <h2 className="text-light fw-bold text-start" style={{fontWeight: '750px', fontSize: '38px'}}>Sergio Hiroshi Carrera Monnier</h2>
+                                    <div className="col-9 rounded-2 align-self-start p-3" style={{backgroundColor: '#869FF2', width: 'auto'}}>
+                                        <h2 className="text-light fw-bold text-start" style={{fontWeight: '750px', fontSize: '40px'}}>Sergio Hiroshi Carrera Monnier</h2>
                                     </div>
                                     <div className="col">
                                         <img src="./images/cara-feliz.png" alt="" className="img-fluid float-end" style={{width: '150px'}}/>
@@ -143,8 +143,8 @@ function Page3(){
                             </div>
                             <div className="col col-md py-4">
                                 <div className="row justify-content-center align-items-center px-1 py-3">
-                                    <div className="col-9 rounded-2 align-self-start p-3" style={{backgroundColor: '#869FF2'}}>
-                                        <h2 className="text-light fw-bold text-start" style={{fontWeight: '750px', fontSize: '38px'}}>Juan Daniel Rodríguez Oropeza</h2>
+                                    <div className="col-9 rounded-2 align-self-start p-3" style={{backgroundColor: '#869FF2', width: 'auto'}}>
+                                        <h2 className="text-light fw-bold text-start" style={{fontWeight: '750px', fontSize: '40px'}}>Juan Daniel Rodríguez Oropeza</h2>
                                     </div>
                                     <div className="col"> 
                                         <img src="./images/cara-mala.png" alt="" className="img-fluid float-end" style={{width: '150px'}}></img>
@@ -181,8 +181,8 @@ function Page3(){
                             </div>
                             <div className="col col-md py-4">
                                 <div className="row justify-content-center align-items-center px-1 py-3">
-                                    <div className="col-9 rounded-2 align-self-start p-3" style={{backgroundColor: '#869FF2'}}>
-                                        <h2 className="text-light fw-bold text-start" style={{fontWeight: '750px', fontSize: '38px'}}>Ricardo José Olmedo Cañas</h2>
+                                    <div className="col-9 rounded-2 align-self-start p-3" style={{backgroundColor: '#869FF2', width: 'auto'}}>
+                                        <h2 className="text-light fw-bold text-start" style={{fontWeight: '750px', fontSize: '40px'}}>Ricardo José Olmedo Cañas</h2>
                                     </div>
                                     <div className="col">
                                         <img src="./images/cara-feliz.png" alt="" className="img-fluid float-end" style={{width: '150px'}}/>
@@ -219,8 +219,8 @@ function Page3(){
                             </div>
                             <div className="col col-md py-4">
                                 <div className="row justify-content-center align-items-center px-1 py-3">
-                                    <div className="col-9 rounded-2 align-self-start p-3" style={{backgroundColor: '#869FF2'}}>
-                                        <h2 className="text-light fw-bold text-start" style={{fontWeight: '750px', fontSize: '38px'}}>Omar Alonso López Valenzuela</h2>
+                                    <div className="col-9 rounded-2 align-self-start p-3" style={{backgroundColor: '#869FF2', width: 'auto'}}>
+                                        <h2 className="text-light fw-bold text-start" style={{fontWeight: '750px', fontSize: '40px'}}>Omar Alonso López Valenzuela</h2>
                                     </div>
                                     <div className="col">
                                         <img src="./images/cara-seria.png" alt="" className="img-fluid float-end" style={{width: '150px'}}/>
