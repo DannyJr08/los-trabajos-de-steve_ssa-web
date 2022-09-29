@@ -3,26 +3,26 @@ body {
 }
 
 .bg {
-    background-image: url(../../../media/images/DocLogin.jpeg);
+    background-image: url(../../../media/images/bg-image.jpg);
     background-size: cover;
     background-position: center center;
 }
 
-h3.page-title {
+h3.page-title1 {
     color: #3532A5;
     font-weight: 750;
     font-size: 30px;
     font-style: bold;
 }
 
-h2.page-title {
+h2.page-title3 {
     color: #3532A5;
     font-weight: 800;
     font-size: 60px;
     font-style: bold;
 }
 
-h1.page-title {
+h1.page-title2 {
     color: #3532A5;
     font-weight: 800;
     font-size: 75px;
