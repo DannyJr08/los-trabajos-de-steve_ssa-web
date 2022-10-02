@@ -6,11 +6,6 @@ nav {
     background: #556FCC;
 }
 
-#back-btn {
-    border: none;
-    filter: opacity(0.4) drop-shadow(0 0 0 rgb(132, 0, 255));   
-}
-
 #bell {
     border: none;
 }
@@ -42,6 +37,22 @@ nav {
     border: none;
 }
 
+.dropdown-name {
+    border: none;
+    background: #556FCC;
+    font-size: 25px;
+    color: inherit;
+}
+
+.dropdown-name:hover {
+    background: none !important;
+}
+
+.logOut {
+    width: 300px;
+    font-size: 18px;
+}
+
 .p-title {
     color: #7A28FF;
     font-weight: 750;
@@ -65,4 +76,13 @@ nav {
 
 .effect:hover {
     transform: scale(1.05);
+}
+
+.effect-btn {
+    cursor: pointer;
+    transition: all ease-out 0.2s;
+}
+
+.effect-btn:hover {
+    transform: scale(1.2);
 }

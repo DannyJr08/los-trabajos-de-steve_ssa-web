@@ -1,4 +1,6 @@
 import React from 'react';
+import Dropdown from 'react-bootstrap/Dropdown';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
 
 // Importación de imágenes jpg, png y svg
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -13,34 +15,47 @@ function Page3(){
         <div className="container-fluid">
             <div className="row d-flex justify-content-center align-items-center">
                 <div className="col">
-                    <i id="bell" className="btn effect float-start">
+                    <i id="bell" className="btn effect-btn float-start">
                         <img src="./images/bell.png" width="40" alt="bell"/>
                     </i>
                 </div>
                 <div className="col-6 align-items-center">
                     <div className="form">
-                        <FontAwesomeIcon icon={faMagnifyingGlass} id="search-icon" className="fa fa-search btn p-0"></FontAwesomeIcon>
+                        <FontAwesomeIcon icon={faMagnifyingGlass} id="search-icon" className="fa fa-search btn p-0 effect-btn"></FontAwesomeIcon>
                         <input type="search" className="form-control form-input fs-5 fw-lighter" placeholder="Buscar pacientes..."/>
                     </div>
                 </div>
                 <div className="col">
                     <span className="float-end text-light fs-4">
-                        <img src="./images/profile-pic.png" className="img-thumbail rounded-circle mx-2" width="35px" alt="#"/>
-                        José Luis González
+                        <div class="row align-items-center justify-content-center">
+                            <Dropdown as={ButtonGroup}>
+                                <Dropdown.Toggle className="dropdown-name">
+                                    <img src="./images/profile-pic.png" className="img-thumbail rounded-circle mx-3" width="40px" alt="#"/>
+                                    José Luis González
+                                </Dropdown.Toggle>
+
+                                <Dropdown.Menu align="end">
+                                    <Dropdown.Item href="/login" className="text-danger">
+                                    <img src="./images/log-out.png" className="img-thumbail mx-2 text-danger" width="20px" alt="#"/>
+                                    Cerrar Sesión
+                                    </Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </div>
                     </span>
                 </div>
             </div>
         </div>
     </nav>
 
-    <div className="container-fluid mb-4" style={{maxWidth: '1430px'}}>
+    <div className="container-fluid mb-4" style={{maxWidth: '1350px'}}>
         <div className="row d-flex justify-content-center align-items-center">
             <div className="col-6">
                 <h1 id="p-title" className="fw-bold mx-2">Agregar o quitar pacientes</h1>
             </div>
             <div className="col">
-                <a href="/#" id="bell" className="btn float-end effect">
-                    <img href="#" src="./images/cross-btn.png" width="85" alt="cross"/>
+                <a href="/page1" id="bell" className="btn float-end effect-btn">
+                    <img href="/#" src="./images/cross-btn.png" width="85" alt="cross"/>
                 </a>
             </div>
         </div>
@@ -53,7 +68,7 @@ function Page3(){
                 <input type="text" className="form-control form-control-lg fs-4 fw-lighter" id="token-input" placeholder="Ingrese el token proporcionado por el paciente" aria-label=".form-control-lg example"/>
             </div>
             <div className="col-auto">
-                <button className="btn btn-lg btn-primary mb-3" id="token-input">Agregar</button>
+                <button className="btn btn-lg btn-primary mb-3 effect" id="token-input">Agregar</button>
             </div>
         </div>
 
@@ -90,7 +105,7 @@ function Page3(){
                 </div>
             </div>
             <div className="col">
-                <i id="bell" className="btn float-end effect">
+                <i id="bell" className="btn float-end effect-btn">
                     <img href="#" src="./images/minus-btn.png" width="85" alt="minus"/>
                 </i>
             </div>
@@ -128,7 +143,7 @@ function Page3(){
                 </div>
             </div>
             <div className="col">
-                <i id="bell" className="btn float-end effect">
+                <i id="bell" className="btn float-end effect-btn">
                     <img href="#" src="./images/minus-btn.png" width="85" alt="minus"/>
                 </i>
             </div>
@@ -166,7 +181,7 @@ function Page3(){
                 </div>
             </div>
             <div className="col">
-                <i id="bell" className="btn float-end effect">
+                <i id="bell" className="btn float-end effect-btn">
                     <img href="#" src="./images/minus-btn.png" width="85" alt="minus"/>
                 </i>
             </div>
@@ -204,7 +219,7 @@ function Page3(){
                 </div>
             </div>
             <div className="col">
-                <i id="bell" className="btn float-end effect">
+                <i id="bell" className="btn float-end effect-btn">
                     <img href="#" src="./images/minus-btn.png" width="85" alt="minus"/>
                 </i>
             </div>
@@ -242,7 +257,7 @@ function Page3(){
                 </div>
             </div>
             <div className="col">
-                <i id="bell" className="btn float-end effect">
+                <i id="bell" className="btn float-end effect-btn">
                     <img href="#" src="./images/minus-btn.png" width="85" alt="minus"/>
                 </i>
             </div>
