@@ -6,11 +6,6 @@ nav {
     background: #556FCC;
 }
 
-#back-btn {
-    border: none;
-    filter: opacity(0.4) drop-shadow(0 0 0 rgb(132, 0, 255));   
-}
-
 #bell {
     border: none;
 }
@@ -65,4 +60,13 @@ nav {
 #c-datos {
     background: #D9D9D9;
     border-radius: 25px;
+}
+
+.effect-btn {
+    cursor: pointer;
+    transition: all ease-out 0.2s;
+}
+
+.effect-btn:hover {
+    transform: scale(1.2);
 }
