@@ -47,7 +47,7 @@ function Login(){
                     </div>
                     <button className="btn btn-primary btn-lg w-100 mb-2 text-form">Iniciar Sesión</button>
                     <div className="my-1">
-                        <span className="text-form">¿No tienes cuenta? <a href="/#">Regístrate aquí</a> </span>
+                        <span className="text-form">¿No tienes cuenta? <a href="/register">Regístrate aquí</a> </span>
                     </div>
                 </form>
                 

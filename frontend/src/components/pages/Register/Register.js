@@ -83,8 +83,8 @@ function Register(){
                         <div className="valid-feedback">Contraseña válida</div>
                     </div>
                     <button className="btn btn-primary btn-lg w-100 text-form">Registrarte</button>
+                    <span class="text-form fs-6">¿Ya tienes cuenta? <a href="/login">Inicia sesión</a> </span>
                 </form>
-                
             </div>
 
             <div className="col bg d-none d-lg-block col-md-5 col-lg-5 col-xl-6 rounded-end">
