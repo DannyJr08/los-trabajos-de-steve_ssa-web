@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useContext} from 'react';
 
 // Importación de imágenes jpg, png y svg
 
