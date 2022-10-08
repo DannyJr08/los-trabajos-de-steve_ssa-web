@@ -37,20 +37,27 @@ nav {
     border: none;
 }
 
-#p-title {
+.dropdown-name {
+    border: none;
+    background: #556FCC;
+    font-size: 25px;
+    color: inherit;
+}
+
+.dropdown-name:hover {
+    background: none !important;
+}
+
+.logOut {
+    width: 300px;
+    font-size: 18px;
+}
+
+.p-title {
     color: #7A28FF;
     font-weight: 750;
-    font-size: 75px;
+    font-size: 110px;
     font-style: bold;
-}
-
-.card-body {
-    background-color: #869FF2;
-    border-radius: 25px;
-}
-
-.c-title {
-    font-size: 50px;
 }
 
 #c-datos {
@@ -60,4 +67,22 @@ nav {
 
 #plus {
     border: none;
+}
+
+.effect {
+    cursor: pointer;
+    transition: all ease-out 0.2s;
+}
+
+.effect:hover {
+    transform: scale(1.05);
+}
+
+.effect-btn {
+    cursor: pointer;
+    transition: all ease-out 0.2s;
+}
+
+.effect-btn:hover {
+    transform: scale(1.2);
 }
