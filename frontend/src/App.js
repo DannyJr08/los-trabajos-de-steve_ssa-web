@@ -1,6 +1,7 @@
 import './assets/scss/app.scss';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthContext } from './context/AuthContext';
 
 import logo from './logo.svg';
 import './App.css';
@@ -12,23 +13,25 @@ import Page2 from './components/pages/Page2/Page2'
 import Page3 from './components/pages/Page3/Page3'
 
 function App() {
+
+  const {currentUser} = useContext(AuthContext)
+
+  const RequireAuth = ({children}) => {
+    return currentUser ? (children) : <Navigate to="/login"/>
+  }
+
   return (
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path='' element={<Navigate to="/login" replace={true} />}/>    {/* la página default será Login, Navigate sirve para redireccionar */}
-          <Route path='/login' element={<Login />} />
-          <Route path='/register' element={<Register />} />
-          <Route path='/page1' element={<Page1 />} />
-          <Route path='/page2' element={<Page2 />} />
-          <Route path='/page3' element={<Page3 />} />
-          
-          {/* Agregar aqui la ruta a los componentes que se vayan importando.   /inicio es como aparecerá en el URL de la página */}
+          <Route path="/">
+            <Route path='/login' element={<Login/>} />
+            <Route path='/register' element={<Register/>} />
+            <Route index element={<RequireAuth><Page1/></RequireAuth>} />
+            <Route path='/page2' element={<RequireAuth><Page2/></RequireAuth>} />
+            <Route path='/page3' element={<RequireAuth><Page3/></RequireAuth>} />
+          </Route>
         </Routes>
-        {/* <footer>
-          <MenuFooter />
-          <Footer />
-        </footer> */}
       </BrowserRouter>
     </div>
   );

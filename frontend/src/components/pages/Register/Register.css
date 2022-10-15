@@ -3,7 +3,7 @@ body {
 }
 
 .bg {
-    background-image: url(../../../media/images/bg-image.jpg);
+    background-image: url(../../../../public/images/bg-image.jpg);
     background-size: cover;
     background-position: center center;
 }
@@ -32,3 +32,8 @@ h1.page-title {
 .text-form {
     font-family: 'Inter', sans-serif;
 }
+
+.check-icon{
+    filter: saturate(100%) contrast(20%) brightness(50%) 
+        invert(75%) sepia(100%) hue-rotate(120deg); 
+  }
