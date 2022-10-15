@@ -37,6 +37,19 @@ nav {
     border: none;
 }
 
+.dataResult {
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.dataResult::-webkit-scrollbar {
+    display: none;
+}
+
+.dataItem:hover {
+    background-color: lightgrey;
+}
+
 .dropdown-name {
     border: none;
     background: #556FCC;

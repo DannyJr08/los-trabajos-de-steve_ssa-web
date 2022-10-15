@@ -3,7 +3,7 @@ body {
 }
 
 .bg {
-    background-image: url(../../../media/images/bg-image.jpg);
+    background-image: url(../../../../public/images/bg-image.jpg);
     background-size: cover;
     background-position: center center;
 }
@@ -11,24 +11,29 @@ body {
 h3.page-title {
     color: #3532A5;
     font-weight: 750;
-    font-size: 20px;
+    font-size: 15px;
     font-style: bold;
 }
 
 h2.page-title {
     color: #3532A5;
     font-weight: 800;
-    font-size: 30px;
+    font-size: 22px;
     font-style: bold;
 }
 
 h1.page-title {
     color: #3532A5;
     font-weight: 800;
-    font-size: 40px;
+    font-size: 32px;
     font-style: bold;
 }
 
 .text-form {
     font-family: 'Inter', sans-serif;
 }
+
+.check-icon{
+    filter: saturate(100%) contrast(20%) brightness(50%) 
+        invert(75%) sepia(100%) hue-rotate(120deg); 
+  }

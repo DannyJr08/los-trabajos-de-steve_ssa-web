@@ -1,20 +1,39 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
+import { signInWithEmailAndPassword  } from 'firebase/auth'
+import { auth } from "../../../firebase-config"
+import { useNavigate } from 'react-router-dom'
+import { AuthContext } from "../../../context/AuthContext"
 
 // Importación de imágenes jpg, png y svg
 
 // Importación de estilos
 import './Login.css'
 
-function Login(){
-    // const form = document.querySelector("form")
+function Login() {
 
-    //     form.addEventListener('submit', e => {
-    //         if (!form.checkValidity()) {
-    //             e.preventDefault()
-    //         }
+    const [error, setError] = useState(false);
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
 
-    //         form.classNameList.add('was-validated')
-    //     })
+    const navigate = useNavigate()
+
+    const {dispatch} = useContext(AuthContext)
+
+    const handleLogin = (e) => {
+        e.preventDefault();
+
+        signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            // Signed in
+            const user = userCredential.user;
+            dispatch({type: "LOGIN", payload:user})
+            navigate("/")
+        })
+        .catch((error) => {
+            setError(true)
+        });
+    }
+
     return (
     <div className="container w-80 bg-primary mt-4 mb-3 rounded shadow">
         <div className="row align-items-stretch">
@@ -25,29 +44,26 @@ function Login(){
                     <h2 className="page-title3">¡Te Saluda!</h2>
                 </div>
 
-                <form novalidate>
+                <form onSubmit={handleLogin}>
                     <div className="form-floating mb-3">
-                        <input type="email" id="email" className="form-control" placeholder="Escriba su correo electrónico" required/>
-                        <label htmlFor="email" className="form-label text-form" style={{opacity: '0.5'}}>Correo Electrónico</label>
-                        <div className="invalid-feedback">Correo inválido</div>
-                        <div className="valid-feedback">Correo válido</div>
+                        <input type="email" onChange={e=>setEmail(e.target.value)}  className="form-control" placeholder="Escriba su correo electrónico" required/>
+                        <label className="form-label text-form" style={{opacity: '0.5'}}>Correo Electrónico</label>
                     </div>
                     <div className="form-floating mb-0">
-                        <input type="password" id="email" className="form-control" placeholder="Escriba su contraseña" required/>
-                        <label htmlFor="email" className="form-label text-form" style={{opacity: '0.5'}}>Contraseña</label>
-                        <div className="invalid-feedback">Contraseña Inválida</div>
-                        <div className="valid-feedback">Contraseña válida</div>
+                        <input type="password" onChange={e=>setPassword(e.target.value)} className="form-control" placeholder="Escriba su contraseña" required/>
+                        <label className="form-label text-form" style={{opacity: '0.5'}}>Contraseña</label>
                     </div>
                     <div className="form-check form-check form-check-inline my-2">
                         <input type="checkbox" id="email" className="form-check-input"/>
-                        <label htmlFor="email" className="form-check-label text-form">Recuérdame</label>
+                        <label className="form-check-label text-form">Recuérdame</label>
                     </div>
                     <div className="my-3">
                         <span><a className="text-form" href="/#">¿Olvidaste tu contraseña?</a></span>
                     </div>
-                    <button className="btn btn-primary btn-lg w-100 mb-2 text-form">Iniciar Sesión</button>
+                    <button type="submit" className="btn btn-primary btn-lg w-100 mb-2 text-form">Iniciar Sesión</button>
+                    {error && <span className="fw-bold text-danger">Correo o contraseña incorrectos</span>}
                     <div className="my-1">
-                        <span className="text-form">¿No tienes cuenta? <a href="/#">Regístrate aquí</a> </span>
+                        <span className="text-form">¿No tienes cuenta? <a href="/register">Regístrate aquí</a> </span>
                     </div>
                 </form>
                 
