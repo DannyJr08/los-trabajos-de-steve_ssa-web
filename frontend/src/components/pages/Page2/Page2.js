@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import { db } from '../../../firebase-config'
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, query, where, onSnapshot } from 'firebase/firestore';
 import { signOut  } from 'firebase/auth'
 import { auth } from "../../../firebase-config"
 import { useNavigate } from 'react-router-dom'
@@ -19,6 +19,19 @@ import './Page2.css'
 function Page2(){
 
     const patientUID = localStorage.getItem('patient');
+
+    // const rPRef = collection(db, 'RegistroPresion')
+
+    // const q = query(rPRef, where("uidPaciente", "==", patientUID));
+
+    // onSnapshot(q, (snapshot) => {
+    //     let rPresion = []
+    //     snapshot.docs.forEach((doc) => {
+    //         rPresion.push({ ...doc.data(), id: doc.id })
+    //     })
+    //     console.log(rPresion[0].comentarios);
+    //     return rPresion;
+    // })
     
     const [show, setShow] = useState(false);
 
@@ -35,6 +48,10 @@ function Page2(){
     const pacientCollectionRef = collection(db, "Paciente");
     const [doctors, setDoctors] = useState([]);
     const medicoCollectionRef = collection(db, "Medico");
+    const [rP, setRP] = useState([]);
+    const rPRef = collection(db, 'RegistroPresion');
+    const [rS, setRS] = useState([]);
+    const rSRef = collection(db, 'RegistroSalud');
 
     useEffect(() => {
         const getUsers = async () => {
@@ -44,6 +61,12 @@ function Page2(){
 
                 const dataD = await getDocs(medicoCollectionRef);
                 setDoctors(dataD.docs.map((doc) => ({...doc.data(), id: doc.id})));
+
+                const dataRP = await getDocs(rPRef);
+                setRP(dataRP.docs.map((doc) => ({...doc.data(), id: doc.id})));
+
+                const dataRS = await getDocs(rSRef);
+                setRS(dataRS.docs.map((doc) => ({...doc.data(), id: doc.id})));
             }
             catch (err) {
                 console.log(err);
@@ -155,7 +178,6 @@ function Page2(){
                                                     <Modal.Title className="modal-title fs-2 fw-bold">Datos Generales del Paciente</Modal.Title>
                                                 </Modal.Header>
                                                 <Modal.Body className="modal-body text-center">
-                                                    <p>
                                                         <span className="fs-4 fw-bold">Fecha de Nacimiento: <span className="fs-4 fw-normal">{patient.fechaNacimiento}</span></span>
                                                         <br></br>
                                                         <span className="fs-4 fw-bold">Estado de salud: <span className="fs-4 fw-normal">En revisión</span></span>
@@ -164,16 +186,21 @@ function Page2(){
                                                         <br></br>
                                                         <span className="fs-4 fw-bold">Altura: <span className="fs-4 fw-normal">{patient.altura} cm</span></span>
                                                         <br></br>
-                                                        <span className="fs-4 fw-bold">Órdenes Médicas: <span className="fs-4 fw-normal">Texto descriptivo de las indicaciones proporcionadas por el médico</span></span>
-                                                        <br></br>
-                                                        <span className="fs-4 fw-bold">Antecedentes de Interés: <span className="fs-4 fw-normal">Texto descriptivo con algunos antecedentes de interés para el doctor</span></span>
-                                                        <br></br>
-                                                        <span className="fs-4 fw-bold">Medicamentos: <span className="fs-4 fw-normal">Lista de medicamentos que toma el page2</span></span>
-                                                        <br></br>
-                                                        <span className="fs-4 fw-bold">Planificación de Cuidados: <span className="fs-4 fw-normal">Texto descriptivo donde se describan las recomendaciones del médico</span></span>
-                                                        <br></br>
-                                                        <span className="fs-4 fw-bold">Otra información clínica pertinente: <span className="fs-4 fw-normal">Texto de ejemplo</span></span>
-                                                    </p>
+                                                        <div>
+                                                            {rS.map((rSalud) => {
+                                                                if (rSalud.uidPaciente === patientUID) {
+                                                                    return (
+                                                                        <div>
+                                                                            <span className="fs-4 fw-bold">Indicaciones del Médico:  <span className="fs-4 fw-normal">{rSalud.indicaciones}</span></span>
+                                                                            <br></br>
+                                                                            <span className="fs-4 fw-bold">Fecha de Toma: <span className="fs-4 fw-normal">{rSalud.fecha}</span></span>
+                                                                            <br></br>
+                                                                            <span className="fs-4 fw-bold">Medicamentos: <span className="fs-4 fw-normal">{}</span></span>
+                                                                        </div>
+                                                                    )
+                                                                }
+                                                            })}
+                                                        </div>
                                                 </Modal.Body>
                                                 <Modal.Footer>
                                                     <Button variant="primary" onClick={handleClose}>Listo</Button>

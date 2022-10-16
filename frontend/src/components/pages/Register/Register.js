@@ -25,7 +25,7 @@ function Register () {
     const [password, setPassword] = useState("");
     const [cPassword, setCPassword] = useState("");
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const handleClose = () => {
         setShow(false)

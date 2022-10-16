@@ -16,6 +16,7 @@ import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import './Page1.css'
 
 function Page1(){
+    var count = 0;
 
     const {currentUser} = useContext(AuthContext)
     const userUID = currentUser.uid;
@@ -142,73 +143,56 @@ function Page1(){
         </div>
         <div className="container-fluid">
             {patients.map((patient) => {
-                if (patient.uidMedicos !== undefined) {
-                    var count = 0;
-                    for (let i = 0; i < patient.uidMedicos.length; i++) {
-                        if (userUID === patient.uidMedicos[i]) {
-                            count++;
-                            return (
-                                <div onClick={handleClick} id={patient.uid} className="row d-flex align-items-center justify-content-center px-5 mb-4">
-                                    <a className="card effect shadow" href="/page2" style={{textDecoration: 'none', maxWidth: '1250px'}}>
-                                        <div className="row align-items-center justify-content-center">
-                                            <div className="col-md-3">
-                                                <img src="./images/profile-pic.png" alt="" className="img-fluid rounded-start p-5"/>
-                                            </div>
-                                            <div className="col col-md py-4">
-                                                <div className="row d-flex justify-content-center align-items-center px-1 py-3">
-                                                    <div className="col-9 rounded-2 align-self-start p-3" style={{backgroundColor: '#869FF2'}}>
-                                                        <h2 className="text-light fw-bold text-center" style={{fontWeight: '750px', fontSize: '45px'}}>{patient.nombrePila} {patient.apellidoPaterno} {patient.apellidoMaterno}</h2>
-                                                    </div>
-                                                    <div className="col">
-                                                        <img src="./images/cara-seria.png" alt="" className="img-fluid float-end" style={{width: '200px'}}/>
-                                                    </div>
-                                                </div>
-                                                <div className="d-flex row p-1 d-flex justify-content-center text-dark">
-                                                    <div id="c-datos" className="col-5 p-3 px-4">
-                                                            <span className="fs-4 fw-bold">Fecha de Nacimiento: <span className="fs-4 fw-normal">{patient.fechaNacimiento}</span></span>
-                                                            <br></br>
-                                                            <span className="fs-4 fw-bold">Estado de salud: <span className="fs-4 fw-normal">En revisión</span></span>
-                                                    </div>
-                                                    <div id="c-datos" className="col p-3 px-4 offset-1">
-                                                        <span className="fs-4 fw-bold">Órdenes médicas: <span className="fs-4 fw-normal">Texto breve de las indicaciones proporcionadas por el médico</span></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            )
-                        }
-                        if (count === 0) {
-                            return (
-                                <div className="container-fluid">
+                for (let i = 0; i < patient.uidMedicos.length; i++) {
+                    if (userUID === patient.uidMedicos[i]) {
+                        count++;
+                        return (
+                            <div onClick={handleClick} id={patient.uid} className="row d-flex align-items-center justify-content-center px-5 mb-4">
+                                <a className="card effect shadow" href="/page2" style={{textDecoration: 'none', maxWidth: '1250px'}}>
                                     <div className="row align-items-center justify-content-center">
-                                        <div className="col" style={{maxWidth: '1290px'}}>
-                                            <Alert variant="warning" className="fw-bold text-warning m-2 p-4 text-center" style={{fontSize: '45px'}}>
-                                                <img src="./images/warning.png" className="img-thumbail" width="75px" alt="#"/>
-                                                ¡Ups! Parece que no has añadido pacientes a tu lista :/
-                                            </Alert>
+                                        <div className="col-md-3">
+                                            <img src="./images/profile-pic.png" alt="" className="img-fluid rounded-start p-5"/>
+                                        </div>
+                                        <div className="col col-md py-4">
+                                            <div className="row d-flex justify-content-center align-items-center px-1 py-3">
+                                                <div className="col-9 rounded-2 align-self-start p-3" style={{backgroundColor: '#869FF2'}}>
+                                                    <h2 className="text-light fw-bold text-center" style={{fontWeight: '750px', fontSize: '45px'}}>{patient.nombrePila} {patient.apellidoPaterno} {patient.apellidoMaterno}</h2>
+                                                </div>
+                                                <div className="col">
+                                                    <img src="./images/cara-seria.png" alt="" className="img-fluid float-end" style={{width: '200px'}}/>
+                                                </div>
+                                            </div>
+                                            <div className="d-flex row p-1 d-flex justify-content-center text-dark">
+                                                <div id="c-datos" className="col-5 p-3 px-4">
+                                                        <span className="fs-4 fw-bold">Fecha de Nacimiento: <span className="fs-4 fw-normal">{patient.fechaNacimiento}</span></span>
+                                                        <br></br>
+                                                        <span className="fs-4 fw-bold">Estado de salud: <span className="fs-4 fw-normal">En revisión</span></span>
+                                                </div>
+                                                <div id="c-datos" className="col p-3 px-4 offset-1">
+                                                    <span className="fs-4 fw-bold">Órdenes médicas: <span className="fs-4 fw-normal">Texto breve de las indicaciones proporcionadas por el médico</span></span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            )
-                        }
+                                </a>
+                            </div>
+                        )
                     }
                 }
-                else {
-                    return (
-                    <div className="container-fluid">
-                        <div className="row align-items-center justify-content-center">
-                            <div className="col" style={{maxWidth: '1290px'}}>
-                                <Alert variant="warning" className="fw-bold text-warning m-2 p-4 text-center" style={{fontSize: '45px'}}>
-                                    <img src="./images/warning.png" className="img-thumbail" width="75px" alt="#"/>
-                                    ¡Ups! Parece que no has añadido pacientes a tu lista :/
-                                </Alert>
-                            </div>
-                        </div>
-                    </div>
-                    )
-                }
+                // if (count === 0) {
+                //     return (
+                //     <div className="container-fluid">
+                //         <div className="row align-items-center justify-content-center">
+                //             <div className="col" style={{maxWidth: '1290px'}}>
+                //                 <Alert variant="warning" className="fw-bold text-warning m-2 p-4 text-center" style={{fontSize: '45px'}}>
+                //                     <img src="./images/warning.png" className="img-thumbail" width="75px" alt="#"/>
+                //                     ¡Ups! Parece que no has añadido pacientes a tu lista :/
+                //                 </Alert>
+                //             </div>
+                //         </div>
+                //     </div>
+                //     )
+                // }
             })}
         </div>
     </div>

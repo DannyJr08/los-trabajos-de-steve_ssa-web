@@ -3,6 +3,7 @@ import { signInWithEmailAndPassword  } from 'firebase/auth'
 import { auth } from "../../../firebase-config"
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from "../../../context/AuthContext"
+import { Alert } from 'react-bootstrap';
 
 // Importación de imágenes jpg, png y svg
 
@@ -11,7 +12,7 @@ import './Login.css'
 
 function Login() {
 
-    const [error, setError] = useState(false);
+    const [error, setError] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
@@ -30,7 +31,7 @@ function Login() {
             navigate("/")
         })
         .catch((error) => {
-            setError(true)
+            setError("El correo o contraseña no coinciden")
         });
     }
 
@@ -43,6 +44,8 @@ function Login() {
                     <h1 className="page-title2">Salud - OS</h1>
                     <h2 className="page-title3">¡Te Saluda!</h2>
                 </div>
+
+                {error && <Alert variant="danger" className="fw-bold text-danger">{error}</Alert>}
 
                 <form onSubmit={handleLogin}>
                     <div className="form-floating mb-3">
@@ -61,7 +64,6 @@ function Login() {
                         <span><a className="text-form" href="/#">¿Olvidaste tu contraseña?</a></span>
                     </div>
                     <button type="submit" className="btn btn-primary btn-lg w-100 mb-2 text-form">Iniciar Sesión</button>
-                    {error && <span className="fw-bold text-danger">Correo o contraseña incorrectos</span>}
                     <div className="my-1">
                         <span className="text-form">¿No tienes cuenta? <a href="/register">Regístrate aquí</a> </span>
                     </div>
