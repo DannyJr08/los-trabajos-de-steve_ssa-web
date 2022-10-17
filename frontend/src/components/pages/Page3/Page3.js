@@ -8,6 +8,7 @@ import { auth } from "../../../firebase-config"
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from "../../../context/AuthContext"
 import { Alert } from 'react-bootstrap';
+import { EThree } from '@virgilsecurity/e3kit-browser'; // or 'e3kit-native'
 
 // Importación de imágenes jpg, png y svg
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -16,6 +17,8 @@ import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import './Page3.css'
 
 function Page3 () {
+    const getToken = firebase.functions().httpsCallable('getVirgilJwt');
+    const initializeFunction = () => getToken().then(result => result.data.token);
 
     const navigate = useNavigate()
     const {dispatch} = useContext(AuthContext)
@@ -57,6 +60,12 @@ function Page3 () {
             console.log("Error");
         });
     }
+
+    EThree.initialize(initializeFunction)
+        .then(EThree => {
+            console.log('init success', EThree)
+        })
+        .catch
 
     return (
         <div>
@@ -210,6 +219,7 @@ function Page3 () {
             </div>
         </div>
     )
+    
 }
 
 export default Page3
