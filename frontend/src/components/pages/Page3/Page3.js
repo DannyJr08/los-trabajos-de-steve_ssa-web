@@ -2,12 +2,13 @@ import React, { useContext, useState, useEffect } from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import { db } from '../../../firebase-config'
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, doc, updateDoc } from 'firebase/firestore';
 import { signOut  } from 'firebase/auth'
 import { auth } from "../../../firebase-config"
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from "../../../context/AuthContext"
 import { Alert } from 'react-bootstrap';
+import md5 from 'md5';
 
 // Importación de imágenes jpg, png y svg
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -16,7 +17,8 @@ import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import './Page3.css'
 
 function Page3 () {
-    var count = 0;
+
+    const [token, setToken] = useState("");
 
     const navigate = useNavigate()
     const {dispatch} = useContext(AuthContext)
@@ -57,6 +59,38 @@ function Page3 () {
         .catch((error) => {
             console.log("Error");
         });
+    }
+
+    const addPatient = async (e) => {
+        e.preventDefault();
+
+        var encrypted = md5(token);
+        let listPatientUID = [];
+        let patientUID;
+        let listMedicoUID = [];
+
+        console.log(encrypted);
+
+        try{
+            {patients.map((patient) => {
+                if (patient.token === encrypted) {
+                    {doctors.map((doctor) => {
+                        if (userUID === doctor.uid) {
+                            listPatientUID = doctor.uidPacientes;
+                            console.log(doctor.uidPacientes[0])
+                        }
+                    })}
+                    console.log(listPatientUID)
+                    listPatientUID.push(patient.uid);
+                }
+            })}
+            console.log(listPatientUID);
+            // await updateDoc(doc(db, "Medico", userUID), { uidPacientes: listPatientUID });
+            // console.log("hola");
+        }
+        catch {
+            console.log("Error");
+        }
     }
 
     return (
@@ -119,15 +153,17 @@ function Page3 () {
 
             <div className="container">
                 <div className="row mb-5 justify-content-center">
-                    <div className="col-6">
-                        <label htmlFor="text" className="visually-hidden">Token</label>
-                        <input type="text" className="form-control form-control-lg fs-3 fw-lighter" id="token-input" placeholder="Ingrese el token proporcionado por el paciente" aria-label=".form-control-lg example"/>
-                    </div>
-                    <div className="col-auto">
-                    <button id="bell" className="btn float-end effect-btn">
-                        <img src="./images/plus-btn.png" width="85" alt="plus"/>
-                    </button>
-                    </div>
+                    <form onSubmit={addPatient}>
+                        <div className="col-6">
+                            <label htmlFor="text" className="visually-hidden">Token</label>
+                            <input type="text" className="form-control form-control-lg fs-3 fw-lighter" id="token-input" placeholder="Ingrese el token proporcionado por el paciente" aria-label=".form-control-lg example" onChange={e=>setToken(e.target.value)}/>
+                        </div>
+                        <div className="col-auto">
+                            <button type="submit" id="bell" className="btn float-end effect-btn">
+                                <img src="./images/plus-btn.png" width="85" alt="plus"/>
+                            </button>
+                        </div>
+                    </form>
                 </div>
 
                 {patients.map((patient) => {
