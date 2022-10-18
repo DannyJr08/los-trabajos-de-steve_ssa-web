@@ -66,6 +66,13 @@ nav {
     font-size: 18px;
 }
 
+.profile-pic {
+    height: 300px;
+    width: 300px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
 .p-title {
     color: #7A28FF;
     font-weight: 750;

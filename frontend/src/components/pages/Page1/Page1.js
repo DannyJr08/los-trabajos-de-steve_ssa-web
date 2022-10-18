@@ -16,15 +16,22 @@ import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import './Page1.css'
 
 function Page1(){
-    var count = 0;
 
     const {currentUser} = useContext(AuthContext)
     const userUID = currentUser.uid;
+    let arrPatientUID = [];
+
+    // Datos de Registro de Presión
+    let mEmocional = [];
 
     const [patients, setUsers] = useState([]);
     const pacientCollectionRef = collection(db, "Paciente");
     const [doctors, setDoctors] = useState([]);
     const medicoCollectionRef = collection(db, "Medico");
+    const [rP, setRP] = useState([]);
+    const rPRef = collection(db, 'RegistroPresion');
+    const [rS, setRS] = useState([]);
+    const rSRef = collection(db, 'RegistroSalud');
 
     const [filteredData, setFilteredData] = useState([]);
 
@@ -36,6 +43,9 @@ function Page1(){
 
                 const dataD = await getDocs(medicoCollectionRef);
                 setDoctors(dataD.docs.map((doc) => ({...doc.data(), id: doc.id})));
+
+                const dataRP = await getDocs(rPRef);
+                setRP(dataRP.docs.map((doc) => ({...doc.data(), id: doc.id})));
             }
             catch (err) {
                 console.log(err);
@@ -66,6 +76,51 @@ function Page1(){
             console.log("Error");
         });
     }
+
+    function imgStatus(mEmocional, uidPaciente, arrPatientUID, rPresion) {
+        var mEmo = "";
+        var m;
+
+        for (let i = 0; i < arrPatientUID.length; i++) {
+            for (let j = 0; j < arrPatientUID.length; j++) {
+                if (uidPaciente === arrPatientUID[i] && uidPaciente === rPresion.uidPaciente && rPresion.medidorEmocional === mEmocional[j]) {
+                    console.log(mEmocional[j])
+                    m = mEmocional[j];
+                    if (m >= 6.66) {
+                        return mEmo = "./images/cara-feliz.png"
+                    }
+                    else if (m >= 3.33 && m < 6.66) {
+                        return mEmo = "./images/cara-seria.png"
+                    }
+                    else if (m < 3.33) {
+                        return mEmo = "./images/cara-mala.png"
+                    }
+                    else {
+                        return mEmo = "./images/cara-gris.png"
+                    }
+                }
+            }
+        }
+    }
+
+    function removeDuplicates(arr) {
+        return [...new Set(arr)];
+    }
+
+    {patients.map((patient) => {
+        for (let i = 0; i < patient.uidMedicos.length; i++) {
+            if (patient.uidMedicos[i] === userUID) {
+                arrPatientUID.push(patient.uid);
+                arrPatientUID = removeDuplicates(arrPatientUID);
+            }
+        }
+        {rP.map((rPresion) => {
+            if (rPresion.uidPaciente === patient.uid) {
+                mEmocional.push(rPresion.medidorEmocional);
+                mEmocional = removeDuplicates(mEmocional);
+            }
+        })}
+    })}
 
     return (
     <div>
@@ -145,13 +200,15 @@ function Page1(){
             {patients.map((patient) => {
                 for (let i = 0; i < patient.uidMedicos.length; i++) {
                     if (userUID === patient.uidMedicos[i]) {
-                        count++;
+                        if (patient.urlImg === undefined || "") {
+                            patient.urlImg = "./images/profile-pic.png";
+                        }
                         return (
                             <div onClick={handleClick} id={patient.uid} className="row d-flex align-items-center justify-content-center px-5 mb-4">
                                 <a className="card effect shadow" href="/page2" style={{textDecoration: 'none', maxWidth: '1250px'}}>
                                     <div className="row align-items-center justify-content-center">
                                         <div className="col-md-3">
-                                            <img src="./images/profile-pic.png" alt="" className="img-fluid rounded-start p-5"/>
+                                            <img src={patient.urlImg} className="img-thumbail rounded-circle p-5 profile-pic"/>
                                         </div>
                                         <div className="col col-md py-4">
                                             <div className="row d-flex justify-content-center align-items-center px-1 py-3">
@@ -159,7 +216,12 @@ function Page1(){
                                                     <h2 className="text-light fw-bold text-center" style={{fontWeight: '750px', fontSize: '45px'}}>{patient.nombrePila} {patient.apellidoPaterno} {patient.apellidoMaterno}</h2>
                                                 </div>
                                                 <div className="col">
-                                                    <img src="./images/cara-seria.png" alt="" className="img-fluid float-end" style={{width: '200px'}}/>
+                                                {rP.map((rPresion) => {
+                                                    return (
+                                                        <img src={imgStatus(mEmocional, patient.uid, arrPatientUID, rPresion)} alt="" className="img-fluid float-end" style={{width: '200px'}}/>
+                                                    )
+                                                })}
+                                                    
                                                 </div>
                                             </div>
                                             <div className="d-flex row p-1 d-flex justify-content-center text-dark">

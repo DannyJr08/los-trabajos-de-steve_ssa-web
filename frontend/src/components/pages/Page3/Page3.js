@@ -133,7 +133,9 @@ function Page3 () {
                 {patients.map((patient) => {
                     for (let i = 0; i < patient.uidMedicos.length; i++) {
                         if (userUID === patient.uidMedicos[i]) {
-                            count++;
+                            if (patient.urlImg === undefined || "") {
+                                patient.urlImg = "./images/profile-pic.png";
+                            }
                             return (
                                 <div className="row justify-content-center align-items-center">
                                     <div className="col-10">
@@ -141,7 +143,7 @@ function Page3 () {
                                             <a className="card effect shadow" href="/page2" style={{textDecoration: 'none', maxWidth: '1400px'}}>
                                                 <div className="row align-items-center justify-content-center">
                                                     <div className="col-md-3">
-                                                        <img src="./images/profile-pic.png" alt="" className="img-fluid rounded-start p-5"/>
+                                                        <img src={patient.urlImg} className="img-thumbail rounded-circle p-5 profile-pic"/>
                                                     </div>
                                                     <div className="col col-md py-4">
                                                         <div className="row justify-content-center align-items-center px-1 py-3">
