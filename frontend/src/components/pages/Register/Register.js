@@ -151,7 +151,7 @@ function Register () {
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body className="modal-body text-center m-3">
-                <img className="p-0 effect-btn check-icon" href="" src="./images/user-check.png" width="250" alt="bell"/>
+                <img className="p-0 effect-btn" href="" src="./images/user-check.png" width="250" alt="bell"/>
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="outline-success" onClick={handleClose}>Aceptar</Button>

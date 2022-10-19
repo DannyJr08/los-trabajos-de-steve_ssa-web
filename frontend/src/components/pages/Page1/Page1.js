@@ -84,7 +84,6 @@ function Page1(){
         for (let i = 0; i < arrPatientUID.length; i++) {
             for (let j = 0; j < arrPatientUID.length; j++) {
                 if (uidPaciente === arrPatientUID[i] && uidPaciente === rPresion.uidPaciente && rPresion.medidorEmocional === mEmocional[j]) {
-                    console.log(mEmocional[j])
                     m = mEmocional[j];
                     if (m >= 6.66) {
                         return mEmo = "./images/cara-feliz.png"
@@ -136,23 +135,6 @@ function Page1(){
                         <div className="search form">
                             <FontAwesomeIcon icon={faMagnifyingGlass} id="search-icon" className="fa fa-search btn p-0 effect-btn"></FontAwesomeIcon>
                             <input type="search" className="form-control form-input fs-5 fw-lighter" placeholder="Buscar pacientes..."/>
-                            {/* <div className="dataResult bg-light rounded-2 my-2 shadow">
-                                {/* {patients.map((patient) => {
-                                    const fullName = patient.nombrePila + " " + patient.apellidoPaterno + " " + patient.apellidoMaterno;
-                                    console.log(fullName);
-                                    // for (let i = 0; i < patient.uidMedicos.length; i++) {
-                                    //     if (userUID === patient.uidMedicos[i]) {
-                                    //         return (
-                                    //             <div className="row dataItem">
-                                    //                 <a className="col-1 py-1 mt-2 mx-5" href="/#" style={{textDecoration: 'none', maxWidth: '1250px'}} target="_blank">
-                                    //                     <p className="text-dark fw-semibold">{fullName}</p>
-                                    //                 </a>
-                                    //             </div>
-                                    //         )
-                                    //     }
-                                    // }
-                                })} 
-                            </div> */}
                         </div>
                     </div>
                     <div className="col">

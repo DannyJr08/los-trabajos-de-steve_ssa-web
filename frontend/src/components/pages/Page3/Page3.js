@@ -7,7 +7,7 @@ import { signOut  } from 'firebase/auth'
 import { auth } from "../../../firebase-config"
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from "../../../context/AuthContext"
-import { Alert } from 'react-bootstrap';
+import { Alert, Modal, Button } from 'react-bootstrap';
 import md5 from 'md5';
 
 // Importación de imágenes jpg, png y svg
@@ -19,6 +19,9 @@ import './Page3.css'
 function Page3 () {
 
     const [token, setToken] = useState("");
+    const [tokenState, setTokenState] = useState({tokenInput: ''});
+
+    const [show, setShow] = useState(false);
 
     const navigate = useNavigate()
     const {dispatch} = useContext(AuthContext)
@@ -30,6 +33,16 @@ function Page3 () {
     const pacientCollectionRef = collection(db, "Paciente");
     const [doctors, setDoctors] = useState([]);
     const medicoCollectionRef = collection(db, "Medico");
+
+    const handleClose = () => {
+        setShow(false)
+    };
+
+    const handleOpen = event => {
+        setShow(true)
+        const patientUID = event.currentTarget.id;
+        localStorage.setItem('patient', patientUID);
+    };
 
     useEffect(() => {
         const getUsers = async () => {
@@ -46,6 +59,27 @@ function Page3 () {
         };
         getUsers()
     },[]);
+
+    const refreshPatients = () => {
+        const getUsers = async () => {
+            try {
+                const dataP = await getDocs(pacientCollectionRef);
+                setUsers(dataP.docs.map((doc) => ({...doc.data(), id: doc.id})));
+
+                const dataD = await getDocs(medicoCollectionRef);
+                setDoctors(dataD.docs.map((doc) => ({...doc.data(), id: doc.id})));
+            }
+            catch (err) {
+                console.log(err);
+            }
+        };
+        getUsers()
+    }
+
+    const handleClick = event => {
+        const patientUID = event.currentTarget.id;
+        localStorage.setItem('patient', patientUID);
+    };
 
     const handleLogOut = (e) => {
         e.preventDefault();
@@ -77,20 +111,53 @@ function Page3 () {
                     {doctors.map((doctor) => {
                         if (userUID === doctor.uid) {
                             listPatientUID = doctor.uidPacientes;
-                            console.log(doctor.uidPacientes[0])
                         }
                     })}
-                    console.log(listPatientUID)
+                    listMedicoUID = patient.uidMedicos;
                     listPatientUID.push(patient.uid);
+                    patientUID = patient.uid;
+                    console.log(patientUID)
                 }
             })}
             console.log(listPatientUID);
-            // await updateDoc(doc(db, "Medico", userUID), { uidPacientes: listPatientUID });
-            // console.log("hola");
+            listMedicoUID.push(userUID);
+            await updateDoc(doc(db, "Medico", userUID), { uidPacientes: listPatientUID });
+            await updateDoc(doc(db, "Paciente", patientUID), { uidMedicos: listMedicoUID });
+            console.log("Éxito");
         }
         catch {
             console.log("Error");
         }
+        refreshPatients()
+    }
+
+    const deletePatient = async (e) => {
+        // e.preventDefault();
+
+        // let listPatientUID = [];
+        // let patientUID = localStorage.getItem('patient');
+        // let listMedicoUID = [];
+
+        // try{
+        //     {patients.map((patient) => {
+        //         if (patient.token === encrypted) {
+        //             {doctors.map((doctor) => {
+        //                 if (userUID === doctor.uid) {
+        //                     listPatientUID = doctor.uidPacientes;
+        //                 }
+        //             })}
+        //             listMedicoUID = patient.uidMedicos;
+        //         }
+        //     })}
+            
+        //     // await updateDoc(doc(db, "Medico", userUID), { uidPacientes: listPatientUID });
+        //     // await updateDoc(doc(db, "Paciente", patientUID), { uidMedicos: listMedicoUID });
+        //     // console.log("Éxito");
+        // }
+        // catch {
+        //     console.log("Error");
+        // }
+        refreshPatients()
     }
 
     return (
@@ -117,6 +184,7 @@ function Page3 () {
                                     <img src="./images/profile-pic.png" className="img-thumbail rounded-circle mx-3" width="40px" alt="#"/>
                                         {doctors.map((doctor) => {
                                             if (userUID === doctor.uid) {
+                                                
                                                 return (
                                                     <span className="fw-semibold d-none d-lg-inline">{doctor.nombrePila} {doctor.apellidoPaterno} {doctor.apellidoMaterno}</span>
                                                 )
@@ -153,13 +221,13 @@ function Page3 () {
 
             <div className="container">
                 <div className="row mb-5 justify-content-center">
-                    <form onSubmit={addPatient}>
+                    <form className="row justify-content-center" onSubmit={addPatient}>
                         <div className="col-6">
                             <label htmlFor="text" className="visually-hidden">Token</label>
-                            <input type="text" className="form-control form-control-lg fs-3 fw-lighter" id="token-input" placeholder="Ingrese el token proporcionado por el paciente" aria-label=".form-control-lg example" onChange={e=>setToken(e.target.value)}/>
+                            <input type="text" className="form-control form-control-lg fs-3 fw-lighter" id="token-input" placeholder="Ingrese el token proporcionado por el paciente" aria-label=".form-control-lg example" onChange={ (e) =>setToken(e.target.value)}/>
                         </div>
                         <div className="col-auto">
-                            <button type="submit" id="bell" className="btn float-end effect-btn">
+                            <button onClick={() => setTokenState({tokenInput: ''})} type="submit" id="bell" className="btn float-end effect-btn">
                                 <img src="./images/plus-btn.png" width="85" alt="plus"/>
                             </button>
                         </div>
@@ -176,10 +244,10 @@ function Page3 () {
                                 <div className="row justify-content-center align-items-center">
                                     <div className="col-10">
                                         <div className="row align-items-center justify-content-center mb-4">
-                                            <a className="card effect shadow" href="/page2" style={{textDecoration: 'none', maxWidth: '1400px'}}>
+                                            <a onClick={handleClick} id={patient.uid} className="card effect shadow" href="/page2" style={{textDecoration: 'none', maxWidth: '1400px'}}>
                                                 <div className="row align-items-center justify-content-center">
                                                     <div className="col-md-3">
-                                                        <img src={patient.urlImg} className="img-thumbail rounded-circle p-5 profile-pic"/>
+                                                        <img src={patient.urlImg} className="img-thumbail rounded-circle p-5 profile-pic" alt=""/>
                                                     </div>
                                                     <div className="col col-md py-4">
                                                         <div className="row justify-content-center align-items-center px-1 py-3">
@@ -206,7 +274,7 @@ function Page3 () {
                                         </div>
                                     </div>
                                     <div className="col">
-                                        <button id="bell" className="btn float-end effect-btn">
+                                        <button onClick={handleOpen} id={patient.uid} className="btn float-end effect-btn">
                                             <img href="#" src="./images/minus-btn.png" width="85" alt="minus"/>
                                         </button>
                                     </div>
@@ -229,6 +297,19 @@ function Page3 () {
                     //     )
                     // }
                 })}
+            <Modal centered backdrop="static" show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title className="modal-title">
+                        <span className="fs-2 fw-bold text-danger">¿Está seguro de eliminar a este paciente?</span>
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body className="modal-body text-center m-3">
+                    <img className="p-0 effect-btn" href="" src="./images/user-minus.png" width="250" alt="bell"/>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="outline-danger" onClick={deletePatient}>Eliminar</Button>
+                </Modal.Footer>
+            </Modal>
             </div>
         </div>
     )
