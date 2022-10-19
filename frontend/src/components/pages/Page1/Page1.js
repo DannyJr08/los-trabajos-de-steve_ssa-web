@@ -22,7 +22,7 @@ function Page1(){
     let arrPatientUID = [];
 
     // Datos de Registro de Presión
-    let mEmocional = [];
+    let mEmocional;
 
     const [patients, setUsers] = useState([]);
     const pacientCollectionRef = collection(db, "Paciente");
@@ -77,49 +77,35 @@ function Page1(){
         });
     }
 
-    function imgStatus(mEmocional, uidPaciente, arrPatientUID, rPresion) {
-        var mEmo = "";
-        var m;
-
-        for (let i = 0; i < arrPatientUID.length; i++) {
-            for (let j = 0; j < arrPatientUID.length; j++) {
-                if (uidPaciente === arrPatientUID[i] && uidPaciente === rPresion.uidPaciente && rPresion.medidorEmocional === mEmocional[j]) {
-                    m = mEmocional[j];
-                    if (m >= 6.66) {
-                        return mEmo = "./images/cara-feliz.png"
-                    }
-                    else if (m >= 3.33 && m < 6.66) {
-                        return mEmo = "./images/cara-seria.png"
-                    }
-                    else if (m < 3.33) {
-                        return mEmo = "./images/cara-mala.png"
-                    }
-                    else {
-                        return mEmo = "./images/cara-gris.png"
-                    }
-                }
+    function imgStatus(uidPaciente) {
+        mEmocional = -1;
+        {rP.map((rPresion) => {
+            if (rPresion.uidPaciente === uidPaciente) {
+                mEmocional = rPresion.medidorEmocional;
+                // console.log(mEmocional);
+                // mEmocional = removeDuplicates(mEmocional);
             }
+        })}
+        var mEmo = "";
+        console.log(mEmocional);
+        if (mEmocional >= 6.66) {
+            return mEmo = "./images/cara-feliz.png"
         }
+        else if (mEmocional >= 3.33 && mEmocional < 6.66) {
+            return mEmo = "./images/cara-seria.png"
+        }
+        else if (mEmocional < 3.33 && mEmocional >= 0) {
+            return mEmo = "./images/cara-mala.png"
+        }
+        else {
+            return mEmo = "./images/cara-gris.png"
+        }
+        
     }
 
     function removeDuplicates(arr) {
         return [...new Set(arr)];
     }
-
-    {patients.map((patient) => {
-        for (let i = 0; i < patient.uidMedicos.length; i++) {
-            if (patient.uidMedicos[i] === userUID) {
-                arrPatientUID.push(patient.uid);
-                arrPatientUID = removeDuplicates(arrPatientUID);
-            }
-        }
-        {rP.map((rPresion) => {
-            if (rPresion.uidPaciente === patient.uid) {
-                mEmocional.push(rPresion.medidorEmocional);
-                mEmocional = removeDuplicates(mEmocional);
-            }
-        })}
-    })}
 
     return (
     <div>
@@ -182,6 +168,7 @@ function Page1(){
             {patients.map((patient) => {
                 for (let i = 0; i < patient.uidMedicos.length; i++) {
                     if (userUID === patient.uidMedicos[i]) {
+                        console.log(patient.uid);
                         if (patient.urlImg === undefined || "") {
                             patient.urlImg = "./images/profile-pic.png";
                         }
@@ -198,12 +185,7 @@ function Page1(){
                                                     <h2 className="text-light fw-bold text-center" style={{fontWeight: '750px', fontSize: '45px'}}>{patient.nombrePila} {patient.apellidoPaterno} {patient.apellidoMaterno}</h2>
                                                 </div>
                                                 <div className="col">
-                                                {rP.map((rPresion) => {
-                                                    return (
-                                                        <img src={imgStatus(mEmocional, patient.uid, arrPatientUID, rPresion)} alt="" className="img-fluid float-end" style={{width: '200px'}}/>
-                                                    )
-                                                })}
-                                                    
+                                                        <img src={imgStatus(patient.uid)} alt="" className="img-fluid float-end" style={{width: '200px'}}/>
                                                 </div>
                                             </div>
                                             <div className="d-flex row p-1 d-flex justify-content-center text-dark">

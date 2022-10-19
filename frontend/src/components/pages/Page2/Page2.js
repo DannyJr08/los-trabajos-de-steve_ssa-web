@@ -44,13 +44,23 @@ function Page2(){
     let medEjercicio = [];
     let medEmocional = [];
     let fechaCuestionario;
+
+    const [nombreMedi, setNMedi] = useState("");
+    const [cantMedi, setCantMedi] = useState("");
+    const [cFrec, setCFrec] = useState("");
+    const [cLim, setCLim] = useState("");
+    const [indic, setIndic] = useState("");
     
     const [show, setShow] = useState(false);
 
-    const [modalState, setModalState] = useState( "modal-one" | "modal-two" | "modal-three" | "close")
+    const [modalState, setModalState] = useState( "modal-one" | "modal-salud" | "modal-two" | "modal-three" | "close")
 
     const handleShowModalOne = () => {
         setModalState("modal-one")
+    }
+
+    const handleShowModalSalud = () => {
+        setModalState("modal-salud")
     }
 
     const handleShowModalTwo = () => {
@@ -352,6 +362,69 @@ function Page2(){
                                                 </Modal.Body>
                                                 <Modal.Footer>
                                                     <Button variant="primary" onClick={handleClose}>Listo</Button>
+                                                </Modal.Footer>
+                                            </Modal>
+
+                                            <Button className="btn fst-italic btn-lg" variant="outline-info" dafs-4ta-bs-toggle="modal" data-bs-target="#exampleModal" type="button" onClick={handleShowModalSalud}>Añadir Nuevo Registro de Salud</Button>
+            
+                                            <Modal centered show={modalState === "modal-salud"} onHide={handleClose} size="lg" id="#exampleModal">
+                                                <Modal.Header closeButton>
+                                                    <Modal.Title className="modal-title fs-1 fw-bold" style={{color: "#7A28FF"}}>Añadir Registro de Salud</Modal.Title>
+                                                </Modal.Header>
+                                                <Modal.Body className="modal-body text-center">
+                                                        <form>
+                                                            <div className="form-group">
+                                                                <div className="row align-items-center justify-content-center m-1">
+                                                                    <div className="col-6">
+                                                                        <div className="form-floating mb-1">
+                                                                            <input id="nombre" type="text" className="form-control" placeholder="Escriba su nombre(s)" required />
+                                                                            <label className="form-label text-form" style={{opacity: '0.5'}}>Nombre del medicamento</label>
+                                                                            <div className="invalid-feedback">Campo vacío</div>
+                                                                            <div className="valid-feedback">Válido</div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-6">
+                                                                        <div className="form-floating mb-1">
+                                                                            <input id="nombre" type="text" className="form-control" placeholder="Escriba su nombre(s)" required />
+                                                                            <label className="form-label text-form" style={{opacity: '0.5'}}>Cantidad (gr)</label>
+                                                                            <div className="invalid-feedback">Campo vacío</div>
+                                                                            <div className="valid-feedback">Válido</div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="row align-items-center justify-content-center m-1">
+                                                                    <div className="col-6">
+                                                                        <div className="form-floating mb-1">
+                                                                            <input id="nombre" type="text" className="form-control" placeholder="Escriba su nombre(s)" required />
+                                                                            <label className="form-label text-form" style={{opacity: '0.5'}}>Consumir cada... (Ejem: "2 días")</label>
+                                                                            <div className="invalid-feedback">Campo vacío</div>
+                                                                            <div className="valid-feedback">Válido</div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-6">
+                                                                        <div className="form-floating mb-1">
+                                                                            <input id="nombre" type="text" className="form-control" placeholder="Escriba su nombre(s)" required />
+                                                                            <label className="form-label text-form" style={{opacity: '0.5'}}>Consumir hasta... (Ejem: 15 de Octubre)</label>
+                                                                            <div className="invalid-feedback">Campo vacío</div>
+                                                                            <div className="valid-feedback">Válido</div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="row align-items-center justify-content-center m-1">
+                                                                <div className="col">
+                                                                    <div className="form-floating mb-1">
+                                                                        <input id="nombre" type="text" className="form-control" placeholder="Escriba su nombre(s)" required />
+                                                                        <label className="form-label text-form" style={{opacity: '0.5'}}>Indicaciones a seguir...</label>
+                                                                        <div className="invalid-feedback">Campo vacío</div>
+                                                                        <div className="valid-feedback">Válido</div>
+                                                                    </div>
+                                                                </div>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                </Modal.Body>
+                                                <Modal.Footer>
+                                                    <Button variant="primary" onClick={handleClose}>Enviar</Button>
                                                 </Modal.Footer>
                                             </Modal>
                                         </div>

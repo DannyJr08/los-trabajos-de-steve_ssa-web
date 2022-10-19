@@ -7,6 +7,7 @@ import { signOut  } from 'firebase/auth'
 import { auth } from "../../../firebase-config"
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from "../../../context/AuthContext"
+import Snackbar from '@mui/material/Snackbar';
 import { Alert, Modal, Button } from 'react-bootstrap';
 import md5 from 'md5';
 
@@ -17,6 +18,8 @@ import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import './Page3.css'
 
 function Page3 () {
+
+    let mEmocional;
 
     const [token, setToken] = useState("");
     const [tokenState, setTokenState] = useState({tokenInput: ''});
@@ -33,6 +36,8 @@ function Page3 () {
     const pacientCollectionRef = collection(db, "Paciente");
     const [doctors, setDoctors] = useState([]);
     const medicoCollectionRef = collection(db, "Medico");
+    const [rP, setRP] = useState([]);
+    const rPRef = collection(db, 'RegistroPresion');
 
     const handleClose = () => {
         setShow(false)
@@ -52,6 +57,9 @@ function Page3 () {
 
                 const dataD = await getDocs(medicoCollectionRef);
                 setDoctors(dataD.docs.map((doc) => ({...doc.data(), id: doc.id})));
+
+                const dataRP = await getDocs(rPRef);
+                setRP(dataRP.docs.map((doc) => ({...doc.data(), id: doc.id})));
             }
             catch (err) {
                 console.log(err);
@@ -95,6 +103,32 @@ function Page3 () {
         });
     }
 
+    function imgStatus(uidPaciente) {
+        mEmocional = -1;
+        {rP.map((rPresion) => {
+            if (rPresion.uidPaciente === uidPaciente) {
+                mEmocional = rPresion.medidorEmocional;
+                // console.log(mEmocional);
+                // mEmocional = removeDuplicates(mEmocional);
+            }
+        })}
+        var mEmo = "";
+        console.log(mEmocional);
+        if (mEmocional >= 6.66) {
+            return mEmo = "./images/cara-feliz.png"
+        }
+        else if (mEmocional >= 3.33 && mEmocional < 6.66) {
+            return mEmo = "./images/cara-seria.png"
+        }
+        else if (mEmocional < 3.33 && mEmocional >= 0) {
+            return mEmo = "./images/cara-mala.png"
+        }
+        else {
+            return mEmo = "./images/cara-gris.png"
+        }
+        
+    }
+
     const addPatient = async (e) => {
         e.preventDefault();
 
@@ -132,31 +166,48 @@ function Page3 () {
     }
 
     const deletePatient = async (e) => {
-        // e.preventDefault();
+        e.preventDefault();
 
-        // let listPatientUID = [];
-        // let patientUID = localStorage.getItem('patient');
-        // let listMedicoUID = [];
+        let listPatientUID = [];
+        let patientUID = localStorage.getItem('patient');
+        let listMedicoUID = [];
 
-        // try{
-        //     {patients.map((patient) => {
-        //         if (patient.token === encrypted) {
-        //             {doctors.map((doctor) => {
-        //                 if (userUID === doctor.uid) {
-        //                     listPatientUID = doctor.uidPacientes;
-        //                 }
-        //             })}
-        //             listMedicoUID = patient.uidMedicos;
-        //         }
-        //     })}
+        try{
+            {patients.map((patient) => {
+                if (patient.uid === patientUID) {
+                    {doctors.map((doctor) => {
+                        if (userUID === doctor.uid) {
+                            listPatientUID = doctor.uidPacientes;
+                        }
+                    })}
+                    listMedicoUID = patient.uidMedicos;
+                }
+            })}
+
+            console.log(listPatientUID);
+            console.log(listMedicoUID);
+
+            for (let i = 0; i < listPatientUID.length; i++) {
+                if (listPatientUID[i] === patientUID) {
+                    listPatientUID.splice(i, 1);
+                }
+            }
+            for (let i = 0; i < listMedicoUID.length; i++) {
+                if (listMedicoUID[i] === userUID) {
+                    listMedicoUID.splice(i, 1);
+                }
+            }
+
+            console.log(listPatientUID);
+            console.log(listMedicoUID);
             
-        //     // await updateDoc(doc(db, "Medico", userUID), { uidPacientes: listPatientUID });
-        //     // await updateDoc(doc(db, "Paciente", patientUID), { uidMedicos: listMedicoUID });
-        //     // console.log("Éxito");
-        // }
-        // catch {
-        //     console.log("Error");
-        // }
+            await updateDoc(doc(db, "Medico", userUID), { uidPacientes: listPatientUID });
+            await updateDoc(doc(db, "Paciente", patientUID), { uidMedicos: listMedicoUID });
+            console.log("Éxito");
+        }
+        catch {
+            console.log("Error");
+        }
         refreshPatients()
     }
 
@@ -255,7 +306,7 @@ function Page3 () {
                                                                 <h2 className="text-light fw-bold text-center" style={{fontWeight: '750px', fontSize: '40px'}}>{patient.nombrePila} {patient.apellidoPaterno} {patient.apellidoMaterno}</h2>
                                                             </div>
                                                             <div className="col">
-                                                                <img src="./images/cara-seria.png" alt="" className="img-fluid float-end" style={{width: '150px'}}/>
+                                                                <img src={imgStatus(patient.uid)} alt="" className="img-fluid float-end" style={{width: '150px'}}/>
                                                             </div>
                                                         </div>
                                                         <div className="d-flex row p-1 d-flex justify-content-center text-dark">
