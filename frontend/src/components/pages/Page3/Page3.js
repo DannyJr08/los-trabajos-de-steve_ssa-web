@@ -351,11 +351,18 @@ function Page3 () {
             <Modal centered backdrop="static" show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
                     <Modal.Title className="modal-title">
-                        <span className="fs-2 fw-bold text-danger">¿Está seguro de eliminar a este paciente?</span>
+                        <span className="fs-2 fw-bold text-danger">¿Desea eliminar a este paciente de su lista?</span>
                     </Modal.Title>
                 </Modal.Header>
-                <Modal.Body className="modal-body text-center m-3">
-                    <img className="p-0 effect-btn" href="" src="./images/user-minus.png" width="250" alt="bell"/>
+                <Modal.Body className="modal-body text-start m-3">
+                    <div className="row justify-content-center align-items-center">
+                        <div className="col-3">
+                            <img className="p-0 effect-btn w-100" href="" src="./images/user-minus.png"  alt="bell"/>
+                        </div>
+                        <div className="col">
+                            <span className="fs-5 fw-bold text-danger">Eliminar al paciente significa desvincularlos a ambos como paciente y médico.</span>
+                        </div>
+                    </div>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="outline-danger" onClick={deletePatient}>Eliminar</Button>

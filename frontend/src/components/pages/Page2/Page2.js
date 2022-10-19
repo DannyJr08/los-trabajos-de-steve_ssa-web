@@ -1,10 +1,9 @@
 import React, { useState, useContext, useEffect } from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
+import { Alert, Modal, Button} from 'react-bootstrap';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import { db } from '../../../firebase-config'
-import { collection, getDocs, query, where, onSnapshot } from 'firebase/firestore';
+import { collection, getDocs, doc, updateDoc } from 'firebase/firestore';
 import { signOut  } from 'firebase/auth';
 import { auth } from "../../../firebase-config";
 import { useNavigate } from 'react-router-dom';
@@ -45,6 +44,9 @@ function Page2(){
     let medEmocional = [];
     let fechaCuestionario;
 
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+
     const [nombreMedi, setNMedi] = useState("");
     const [cantMedi, setCantMedi] = useState("");
     const [cFrec, setCFrec] = useState("");
@@ -72,7 +74,7 @@ function Page2(){
     }
 
     const handleClose = () => {
-    setModalState("close")
+        setModalState("close")
     }
 
     // const handleClosed = () => setShow(false);
@@ -119,6 +121,41 @@ function Page2(){
         };
         getUsers()
     }, []);
+
+    const addHealthRegister = async (e) => {
+        e.preventDefault();
+
+        let listCMedicamentos = [];
+        let listLimMedicamentos = [];
+        let listFrecMedicamentos = [];
+        let listNombreMedicamentos = [];
+        let indicacionesMed;
+
+        try {
+            setError("");
+            setLoading(true);
+            {rS.map((rSalud) => {
+                if (rSalud.uidPaciente === patientUID && rSalud.uidMedico === userUID) {
+                    listCMedicamentos = rSalud.cantidadMedicamentos;
+                    listLimMedicamentos = rSalud.fechaLimiteMedicamentos;
+                    listFrecMedicamentos = rSalud.frecuenciaMedicamentos;
+                    listNombreMedicamentos = rSalud.nombreMedicamentos;
+                    indicacionesMed = rSalud.indicaciones;
+                }
+            })}
+            listCMedicamentos.push(cantMedi);
+            listLimMedicamentos.push(cLim);
+            listFrecMedicamentos.push(cFrec);
+            listNombreMedicamentos.push(nombreMedi);
+            indicacionesMed = indic;
+            await updateDoc(doc(db, "RegistroSalud", patientUID), { cantidadMedicamentos: listCMedicamentos, fechaLimiteMedicamentos: listLimMedicamentos, frecuenciaMedicamentos: listFrecMedicamentos, indicaciones: indicacionesMed, nombreMedicamentos: listNombreMedicamentos, uidMedico: patientUID, uidPaciente: userUID});
+            console.log("Éxito");
+            setModalState("close");
+        }
+        catch {
+            setError("Error al crear la cuenta")
+        }
+    };
 
     function removeDuplicates(arr) {
         return [...new Set(arr)];
@@ -174,7 +211,7 @@ function Page2(){
             pD.push(rPresion.presionDiastolica);
             // pD = removeDuplicates(pD);
             pS.push(rPresion.presionSistolica);
-            pS = removeDuplicates(pS);
+            // pS = removeDuplicates(pS);
             pulsos.push(rPresion.pulso);
             // pulsos = removeDuplicates(pulsos);
             mEmocional.push(rPresion.medidorEmocional);
@@ -189,19 +226,18 @@ function Page2(){
     pS = verify7(pS);
     pulsos = verify7(pulsos);
 
-
     {rS.map((rSalud) => {
         if (rSalud.uidPaciente === patientUID && rSalud.uidMedico === userUID) {
             fecha = rSalud.fecha;
             indicaciones = rSalud.indicaciones;
             cantMed.push(rSalud.cantidadMedicamentos);
-            cantMed = removeDuplicates(cantMed);
+            // cantMed = removeDuplicates(cantMed);
             fechaLimMed.push(rSalud.fechaLimiteMedicamentos);
-            fechaLimMed = removeDuplicates(fechaLimMed);
+            // fechaLimMed = removeDuplicates(fechaLimMed);
             frecMed.push(rSalud.frecuenciaMedicamentos);
-            frecMed = removeDuplicates(frecMed);
+            // frecMed = removeDuplicates(frecMed);
             nombreMed.push(rSalud.nombreMedicamentos);
-            nombreMed = removeDuplicates(nombreMed);
+            // nombreMed = removeDuplicates(nombreMed);
         }
     })}
 
@@ -337,18 +373,20 @@ function Page2(){
                                                         <span className="fs-3 fw-bold">Medicamentos:</span>
                                                         <br></br>
                                                         {rS.map((rSalud) => {
+                                                            console.log(rSalud.cantidadMedicamentos)
                                                             if (userUID === rSalud.uidMedico && patientUID === rSalud.uidPaciente) {
+                                                                console.log(rSalud.uidPaciente)
                                                                 for (let i = 0; i < cantMed.length; i++) {
                                                                     return (
                                                                         <div>
+                                                                            <span className="fs-5 fw-bold fst-italic">Actualizado el: <span className="fw-semibold" style={{color: "#7A28FF"}}>{fecha}</span></span>
+                                                                            <br></br>
                                                                             <span className="fs-4 fw-bold" style={{color: "#556FCC"}}>Medicamento {i + 1}: <span className="fw-bold text-dark">{nombreMed[i]}</span></span>
                                                                             <br></br>
                                                                             <span className="fs-5 fw-bold">Dosis de Consumo: <span className="fw-semibold" style={{color: "#7A28FF"}}>{cantMed[i]}</span></span>
                                                                             <br></br>
                                                                             <span className="fs-5 fw-bold">Frecuencia: <span className="fw-semibold" style={{color: "#7A28FF"}}>{frecMed[i]}</span></span>
                                                                             <br></br>
-                                                                            <span className="fs-5 fw-bold">Recetado desde: <span className="fw-semibold" style={{color: "#7A28FF"}}>{fecha}</span></span>
-                                                                            <br></br>  
                                                                             <span className="fs-5 fw-bold">Consumir hasta: <span className="fw-semibold" style={{color: "#7A28FF"}}>{fechaLimMed[i]}</span></span>
                                                                             <br></br>
                                                                             <span className="fw-semibold" style={{color: "#7A28FF"}}>-----------------------------------------------------</span>
@@ -371,13 +409,16 @@ function Page2(){
                                                 <Modal.Header closeButton>
                                                     <Modal.Title className="modal-title fs-1 fw-bold" style={{color: "#7A28FF"}}>Añadir Registro de Salud</Modal.Title>
                                                 </Modal.Header>
-                                                <Modal.Body className="modal-body text-center">
-                                                        <form>
+                                                <form onSubmit={addHealthRegister}>
+                                                    <Modal.Body className="modal-body text-center">
+                                                    <div>
+                                                        {error && <Alert variant="danger" className="fw-bold text-danger">{error}</Alert>}
+                                                    </div>
                                                             <div className="form-group">
                                                                 <div className="row align-items-center justify-content-center m-1">
                                                                     <div className="col-6">
                                                                         <div className="form-floating mb-1">
-                                                                            <input id="nombre" type="text" className="form-control" placeholder="Escriba su nombre(s)" required />
+                                                                            <input id="nombre" type="text" className="form-control" placeholder="Escriba su nombre(s)" required onChange={e=>setNMedi(e.target.value)} />
                                                                             <label className="form-label text-form" style={{opacity: '0.5'}}>Nombre del medicamento</label>
                                                                             <div className="invalid-feedback">Campo vacío</div>
                                                                             <div className="valid-feedback">Válido</div>
@@ -385,8 +426,8 @@ function Page2(){
                                                                     </div>
                                                                     <div className="col-6">
                                                                         <div className="form-floating mb-1">
-                                                                            <input id="nombre" type="text" className="form-control" placeholder="Escriba su nombre(s)" required />
-                                                                            <label className="form-label text-form" style={{opacity: '0.5'}}>Cantidad (gr)</label>
+                                                                            <input id="nombre" type="text" className="form-control" placeholder="Escriba su nombre(s)" required onChange={e=>setCantMedi(e.target.value)} />
+                                                                            <label className="form-label text-form" style={{opacity: '0.5'}}>Cantidad... (Ejem: 15ml)</label>
                                                                             <div className="invalid-feedback">Campo vacío</div>
                                                                             <div className="valid-feedback">Válido</div>
                                                                         </div>
@@ -395,7 +436,7 @@ function Page2(){
                                                                 <div className="row align-items-center justify-content-center m-1">
                                                                     <div className="col-6">
                                                                         <div className="form-floating mb-1">
-                                                                            <input id="nombre" type="text" className="form-control" placeholder="Escriba su nombre(s)" required />
+                                                                            <input id="nombre" type="text" className="form-control" placeholder="Escriba su nombre(s)" required onChange={e=>setCFrec(e.target.value)} />
                                                                             <label className="form-label text-form" style={{opacity: '0.5'}}>Consumir cada... (Ejem: "2 días")</label>
                                                                             <div className="invalid-feedback">Campo vacío</div>
                                                                             <div className="valid-feedback">Válido</div>
@@ -403,7 +444,7 @@ function Page2(){
                                                                     </div>
                                                                     <div className="col-6">
                                                                         <div className="form-floating mb-1">
-                                                                            <input id="nombre" type="text" className="form-control" placeholder="Escriba su nombre(s)" required />
+                                                                            <input id="nombre" type="text" className="form-control" placeholder="Escriba su nombre(s)" required onChange={e=>setCLim(e.target.value)} />
                                                                             <label className="form-label text-form" style={{opacity: '0.5'}}>Consumir hasta... (Ejem: 15 de Octubre)</label>
                                                                             <div className="invalid-feedback">Campo vacío</div>
                                                                             <div className="valid-feedback">Válido</div>
@@ -413,7 +454,7 @@ function Page2(){
                                                                 <div className="row align-items-center justify-content-center m-1">
                                                                 <div className="col">
                                                                     <div className="form-floating mb-1">
-                                                                        <input id="nombre" type="text" className="form-control" placeholder="Escriba su nombre(s)" required />
+                                                                        <input id="nombre" type="text" className="form-control" placeholder="Escriba su nombre(s)" required onChange={e=>setIndic(e.target.value)} />
                                                                         <label className="form-label text-form" style={{opacity: '0.5'}}>Indicaciones a seguir...</label>
                                                                         <div className="invalid-feedback">Campo vacío</div>
                                                                         <div className="valid-feedback">Válido</div>
@@ -421,11 +462,11 @@ function Page2(){
                                                                 </div>
                                                                 </div>
                                                             </div>
-                                                        </form>
-                                                </Modal.Body>
-                                                <Modal.Footer>
-                                                    <Button variant="primary" onClick={handleClose}>Enviar</Button>
-                                                </Modal.Footer>
+                                                    </Modal.Body>
+                                                    <Modal.Footer>
+                                                        <button type="submit" className="btn btn-primary">Enviar</button>
+                                                    </Modal.Footer>
+                                                </form>
                                             </Modal>
                                         </div>
                                     </div>

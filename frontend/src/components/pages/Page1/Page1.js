@@ -46,6 +46,9 @@ function Page1(){
 
                 const dataRP = await getDocs(rPRef);
                 setRP(dataRP.docs.map((doc) => ({...doc.data(), id: doc.id})));
+
+                const dataRS = await getDocs(rSRef);
+                setRS(dataRS.docs.map((doc) => ({...doc.data(), id: doc.id})));
             }
             catch (err) {
                 console.log(err);
@@ -87,7 +90,6 @@ function Page1(){
             }
         })}
         var mEmo = "";
-        console.log(mEmocional);
         if (mEmocional >= 6.66) {
             return mEmo = "./images/cara-feliz.png"
         }
@@ -101,6 +103,20 @@ function Page1(){
             return mEmo = "./images/cara-gris.png"
         }
         
+    }
+
+    function getIndicaciones(uidPaciente) {
+        let indicaciones;
+        {rS.map((rSalud) => {
+            if (rSalud.uidPaciente === uidPaciente) {
+                indicaciones = rSalud.indicaciones;
+                console.log(indicaciones)
+            }
+        })}
+        if (indicaciones === undefined) {
+            return "Por el momento no hay indicaciones."
+        }
+        return indicaciones;
     }
 
     function removeDuplicates(arr) {
@@ -168,7 +184,6 @@ function Page1(){
             {patients.map((patient) => {
                 for (let i = 0; i < patient.uidMedicos.length; i++) {
                     if (userUID === patient.uidMedicos[i]) {
-                        console.log(patient.uid);
                         if (patient.urlImg === undefined || "") {
                             patient.urlImg = "./images/profile-pic.png";
                         }
@@ -189,13 +204,13 @@ function Page1(){
                                                 </div>
                                             </div>
                                             <div className="d-flex row p-1 d-flex justify-content-center text-dark">
-                                                <div id="c-datos" className="col-5 p-3 px-4">
-                                                        <span className="fs-4 fw-bold">Fecha de Nacimiento: <span className="fs-4 fw-normal">{patient.fechaNacimiento}</span></span>
+                                                <div id="c-datos" className="col-4 p-2 px-4">
+                                                        <span className="fs-5 fw-bold m-1">Fecha de Nacimiento: <span className="fw-normal">{patient.fechaNacimiento}</span></span>
                                                         <br></br>
-                                                        <span className="fs-4 fw-bold">Estado de salud: <span className="fs-4 fw-normal">En revisión</span></span>
+                                                        <span className="fs-5 fw-bold">Peso: <span className="fw-normal">{patient.peso}</span></span>
                                                 </div>
-                                                <div id="c-datos" className="col p-3 px-4 offset-1">
-                                                    <span className="fs-4 fw-bold">Órdenes médicas: <span className="fs-4 fw-normal">Texto breve de las indicaciones proporcionadas por el médico</span></span>
+                                                <div id="c-datos" className="col p-2 px-4 offset-1">
+                                                    <span className="fs-5 fw-bold m-1">Indicaciones: <span className="fw-normal">{getIndicaciones(patient.uid)}</span></span>
                                                 </div>
                                             </div>
                                         </div>
