@@ -37,6 +37,19 @@ nav {
     border: none;
 }
 
+.dataResult {
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.dataResult::-webkit-scrollbar {
+    display: none;
+}
+
+.dataItem:hover {
+    background-color: lightgrey;
+}
+
 .dropdown-name {
     border: none;
     background: #556FCC;
@@ -51,6 +64,13 @@ nav {
 .logOut {
     width: 300px;
     font-size: 18px;
+}
+
+.profile-pic {
+    height: 300px;
+    width: 300px;
+    border-radius: 50%;
+    overflow: hidden;
 }
 
 .p-title {
