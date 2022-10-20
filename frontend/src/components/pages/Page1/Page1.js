@@ -184,6 +184,7 @@ function Page1(){
             {patients.map((patient) => {
                 for (let i = 0; i < patient.uidMedicos.length; i++) {
                     if (userUID === patient.uidMedicos[i]) {
+                        arrPatientUID.push(patient.uid);
                         if (patient.urlImg === undefined || "") {
                             patient.urlImg = "./images/profile-pic.png";
                         }
@@ -207,7 +208,7 @@ function Page1(){
                                                 <div id="c-datos" className="col-4 p-2 px-4">
                                                         <span className="fs-5 fw-bold m-1">Fecha de Nacimiento: <span className="fw-normal">{patient.fechaNacimiento}</span></span>
                                                         <br></br>
-                                                        <span className="fs-5 fw-bold">Peso: <span className="fw-normal">{patient.peso}</span></span>
+                                                        <span className="fs-5 fw-bold">Peso: <span className="fw-normal">{patient.peso} Kg</span></span>
                                                 </div>
                                                 <div id="c-datos" className="col p-2 px-4 offset-1">
                                                     <span className="fs-5 fw-bold m-1">Indicaciones: <span className="fw-normal">{getIndicaciones(patient.uid)}</span></span>

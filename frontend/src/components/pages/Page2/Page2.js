@@ -122,39 +122,59 @@ function Page2(){
         getUsers()
     }, []);
 
+    const refreshPatients = () => {
+        const getUsers = async () => {
+            try {
+                const dataP = await getDocs(pacientCollectionRef);
+                setUsers(dataP.docs.map((doc) => ({...doc.data(), id: doc.id})));
+
+                const dataD = await getDocs(medicoCollectionRef);
+                setDoctors(dataD.docs.map((doc) => ({...doc.data(), id: doc.id})));
+
+                const dataRP = await getDocs(rPRef);
+                setRP(dataRP.docs.map((doc) => ({...doc.data(), id: doc.id})));
+
+                const dataRS = await getDocs(rSRef);
+                setRS(dataRS.docs.map((doc) => ({...doc.data(), id: doc.id})));
+
+                const dataCS = await getDocs(cSRef);
+                setCS(dataCS.docs.map((doc) => ({...doc.data(), id: doc.id})));
+            }
+            catch (err) {
+                console.log(err);
+            }
+        };
+        getUsers()
+    }
+
     const addHealthRegister = async (e) => {
         e.preventDefault();
 
-        let listCMedicamentos = [];
-        let listLimMedicamentos = [];
-        let listFrecMedicamentos = [];
-        let listNombreMedicamentos = [];
-        let indicacionesMed;
+        const date = new Date();
+
+        let day = date.getDate();
+        let month = date.getMonth() + 1;
+        let year = date.getFullYear();
+
+        let currentDate = `${day}-${month}-${year}`;
 
         try {
             setError("");
             setLoading(true);
-            {rS.map((rSalud) => {
-                if (rSalud.uidPaciente === patientUID && rSalud.uidMedico === userUID) {
-                    listCMedicamentos = rSalud.cantidadMedicamentos;
-                    listLimMedicamentos = rSalud.fechaLimiteMedicamentos;
-                    listFrecMedicamentos = rSalud.frecuenciaMedicamentos;
-                    listNombreMedicamentos = rSalud.nombreMedicamentos;
-                    indicacionesMed = rSalud.indicaciones;
-                }
-            })}
-            listCMedicamentos.push(cantMedi);
-            listLimMedicamentos.push(cLim);
-            listFrecMedicamentos.push(cFrec);
-            listNombreMedicamentos.push(nombreMedi);
-            indicacionesMed = indic;
-            await updateDoc(doc(db, "RegistroSalud", patientUID), { cantidadMedicamentos: listCMedicamentos, fechaLimiteMedicamentos: listLimMedicamentos, frecuenciaMedicamentos: listFrecMedicamentos, indicaciones: indicacionesMed, nombreMedicamentos: listNombreMedicamentos, uidMedico: patientUID, uidPaciente: userUID});
+
+            cantMed.push(cantMedi);
+            fechaLimMed.push(cLim);
+            frecMed.push(cFrec);
+            nombreMed.push(nombreMedi);
+            indicaciones = indic;
+            await updateDoc(doc(db, "RegistroSalud", patientUID), { cantidadMedicamentos: cantMed, fecha: currentDate, fechaLimiteMedicamentos: fechaLimMed, frecuenciaMedicamentos: frecMed, indicaciones: indicaciones, nombreMedicamentos: nombreMed, uidMedico: userUID, uidPaciente: patientUID});
             console.log("Éxito");
             setModalState("close");
         }
         catch {
             setError("Error al crear la cuenta")
         }
+        refreshPatients()
     };
 
     function removeDuplicates(arr) {
@@ -227,19 +247,24 @@ function Page2(){
     pulsos = verify7(pulsos);
 
     {rS.map((rSalud) => {
-        if (rSalud.uidPaciente === patientUID && rSalud.uidMedico === userUID) {
+        if (userUID === rSalud.uidMedico && patientUID === rSalud.uidPaciente) {
             fecha = rSalud.fecha;
             indicaciones = rSalud.indicaciones;
-            cantMed.push(rSalud.cantidadMedicamentos);
+            cantMed = rSalud.cantidadMedicamentos;
             // cantMed = removeDuplicates(cantMed);
-            fechaLimMed.push(rSalud.fechaLimiteMedicamentos);
+            fechaLimMed = rSalud.fechaLimiteMedicamentos;
             // fechaLimMed = removeDuplicates(fechaLimMed);
-            frecMed.push(rSalud.frecuenciaMedicamentos);
+            frecMed = rSalud.frecuenciaMedicamentos;
             // frecMed = removeDuplicates(frecMed);
-            nombreMed.push(rSalud.nombreMedicamentos);
+            nombreMed = rSalud.nombreMedicamentos;
             // nombreMed = removeDuplicates(nombreMed);
         }
     })}
+
+    let indices = [];
+    for (let i = 0; i < cantMed.length; i++) {
+        indices[i] = i;
+    }
 
     {cS.map((cSemanal) => {
         if (cSemanal.uidPaciente === patientUID) {
@@ -346,8 +371,6 @@ function Page2(){
                                         <p className="card-text text-center">
                                             <span className="fs-4 fw-bold">Fecha de Nacimiento: <span className="fs-4 fw-normal">{patient.fechaNacimiento}</span></span>
                                             <br></br>
-                                            <span className="fs-4 fw-bold">Estado de salud: <span className="fs-4 fw-normal">En revisión</span></span>
-                                            <br></br>
                                             <span className="fs-4 fw-bold">Peso: <span className="fs-4 fw-normal">{patient.peso} Kg</span></span>
                                             <br></br>
                                             <span className="fs-4 fw-bold">Altura: <span className="fs-4 fw-normal">{patient.altura} cm</span></span>
@@ -362,8 +385,6 @@ function Page2(){
                                                 <Modal.Body className="modal-body text-center">
                                                         <span className="fs-3 fw-bold">Fecha de Nacimiento: <span className="fw-normal">{patient.fechaNacimiento}</span></span>
                                                         <br></br>
-                                                        <span className="fs-3 fw-bold">Estado de salud: <span className="fw-normal">En revisión</span></span>
-                                                        <br></br>
                                                         <span className="fs-3 fw-bold">Peso: <span className="fw-normal">{patient.peso} Kg</span></span>
                                                         <br></br>
                                                         <span className="fs-3 fw-bold">Altura: <span className="fw-normal">{patient.altura} cm</span></span>
@@ -372,30 +393,23 @@ function Page2(){
                                                         <br></br>
                                                         <span className="fs-3 fw-bold">Medicamentos:</span>
                                                         <br></br>
-                                                        {rS.map((rSalud) => {
-                                                            console.log(rSalud.cantidadMedicamentos)
-                                                            if (userUID === rSalud.uidMedico && patientUID === rSalud.uidPaciente) {
-                                                                console.log(rSalud.uidPaciente)
-                                                                for (let i = 0; i < cantMed.length; i++) {
-                                                                    return (
-                                                                        <div>
-                                                                            <span className="fs-5 fw-bold fst-italic">Actualizado el: <span className="fw-semibold" style={{color: "#7A28FF"}}>{fecha}</span></span>
-                                                                            <br></br>
-                                                                            <span className="fs-4 fw-bold" style={{color: "#556FCC"}}>Medicamento {i + 1}: <span className="fw-bold text-dark">{nombreMed[i]}</span></span>
-                                                                            <br></br>
-                                                                            <span className="fs-5 fw-bold">Dosis de Consumo: <span className="fw-semibold" style={{color: "#7A28FF"}}>{cantMed[i]}</span></span>
-                                                                            <br></br>
-                                                                            <span className="fs-5 fw-bold">Frecuencia: <span className="fw-semibold" style={{color: "#7A28FF"}}>{frecMed[i]}</span></span>
-                                                                            <br></br>
-                                                                            <span className="fs-5 fw-bold">Consumir hasta: <span className="fw-semibold" style={{color: "#7A28FF"}}>{fechaLimMed[i]}</span></span>
-                                                                            <br></br>
-                                                                            <span className="fw-semibold" style={{color: "#7A28FF"}}>-----------------------------------------------------</span>
-                                                                        </div>
-                                                                    )
-                                                                }
-                                                                
-                                                            }
-                                                        })}
+                                                        <span className="fs-5 fw-bold fst-italic">Actualizado el: <span className="fw-semibold" style={{color: "#7A28FF"}}>{fecha}</span></span>
+                                                        <br></br>
+                                                        {
+                                                            indices.map( i => 
+                                                                <div>
+                                                                    <span className="fs-4 fw-bold" style={{color: "#556FCC"}}>Medicamento {i + 1}: <span className="fw-bold text-dark">{nombreMed[i]}</span></span>
+                                                                    <br></br>
+                                                                    <span className="fs-5 fw-bold">Dosis de Consumo: <span className="fw-semibold" style={{color: "#7A28FF"}}>{cantMed[i]}</span></span>
+                                                                    <br></br>
+                                                                    <span className="fs-5 fw-bold">Frecuencia: <span className="fw-semibold" style={{color: "#7A28FF"}}>{frecMed[i]}</span></span>
+                                                                    <br></br>
+                                                                    <span className="fs-5 fw-bold">Consumir hasta: <span className="fw-semibold" style={{color: "#7A28FF"}}>{fechaLimMed[i]}</span></span>
+                                                                    <br></br>
+                                                                    <span className="fw-semibold" style={{color: "#7A28FF"}}>-----------------------------------------------------</span>
+                                                                </div>
+                                                            )
+                                                        }
                                                         
                                                 </Modal.Body>
                                                 <Modal.Footer>
@@ -566,18 +580,7 @@ function Page2(){
                                                             'rgb(75, 192, 192)'
                                                             ],
                                                             borderWidth: 1
-                                                        },
-                                                        // {
-                                                        //     label: 'Medidor Emocional',
-                                                        //     data: mEmocional,
-                                                        //     backgroundColor: [
-                                                        //     'rgba(255, 159, 64, 0.2)'
-                                                        //     ],
-                                                        //     borderColor: [
-                                                        //     'rgb(255, 159, 64)'
-                                                        //     ],
-                                                        //     borderWidth: 1
-                                                        // }
+                                                        }
                                                     ]
                                                     }} />
                                                 </div>

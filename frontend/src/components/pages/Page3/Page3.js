@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import { db } from '../../../firebase-config'
@@ -7,9 +7,9 @@ import { signOut  } from 'firebase/auth'
 import { auth } from "../../../firebase-config"
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from "../../../context/AuthContext"
-import Snackbar from '@mui/material/Snackbar';
 import { Alert, Modal, Button } from 'react-bootstrap';
 import md5 from 'md5';
+import Snackbar from '../../Snackbar';
 
 // Importación de imágenes jpg, png y svg
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -20,6 +20,11 @@ import './Page3.css'
 function Page3 () {
 
     let mEmocional;
+
+    const snackbarRef = useRef(null)
+    const snackbarRef2 = useRef(null)
+    const snackbarRef3 = useRef(null)
+    const snackbarRef4 = useRef(null)
 
     const [token, setToken] = useState("");
     const [tokenState, setTokenState] = useState({tokenInput: ''});
@@ -76,6 +81,9 @@ function Page3 () {
 
                 const dataD = await getDocs(medicoCollectionRef);
                 setDoctors(dataD.docs.map((doc) => ({...doc.data(), id: doc.id})));
+
+                const dataRP = await getDocs(rPRef);
+                setRP(dataRP.docs.map((doc) => ({...doc.data(), id: doc.id})));
             }
             catch (err) {
                 console.log(err);
@@ -158,9 +166,11 @@ function Page3 () {
             await updateDoc(doc(db, "Medico", userUID), { uidPacientes: listPatientUID });
             await updateDoc(doc(db, "Paciente", patientUID), { uidMedicos: listMedicoUID });
             console.log("Éxito");
+            snackbarRef.current.show();
         }
         catch {
             console.log("Error");
+            snackbarRef2.current.show();
         }
         refreshPatients()
     }
@@ -204,9 +214,12 @@ function Page3 () {
             await updateDoc(doc(db, "Medico", userUID), { uidPacientes: listPatientUID });
             await updateDoc(doc(db, "Paciente", patientUID), { uidMedicos: listMedicoUID });
             console.log("Éxito");
+            snackbarRef3.current.show();
+            // setShow(false);
         }
         catch {
             console.log("Error");
+            snackbarRef4.current.show();
         }
         refreshPatients()
     }
@@ -281,6 +294,8 @@ function Page3 () {
                             <button onClick={() => setTokenState({tokenInput: ''})} type="submit" id="bell" className="btn float-end effect-btn">
                                 <img src="./images/plus-btn.png" width="85" alt="plus"/>
                             </button>
+                            <Snackbar  ref={snackbarRef} message="El Paciente ha sido agregado" type= "success"/>
+                            <Snackbar  ref={snackbarRef2} message="Token Invalido" type= "fail"/>
                         </div>
                     </form>
                 </div>
@@ -313,7 +328,7 @@ function Page3 () {
                                                             <div id="c-datos" className="col-5 p-3 px-4">
                                                                     <span className="fs-6 fw-bold">Fecha de Nacimiento: <span className="fs-6 fw-normal">{patient.fechaNacimiento}</span></span>
                                                                     <br></br>
-                                                                    <span className="fs-6 fw-bold">Estado de salud: <span className="fs-6 fw-normal">En revisión</span></span>
+                                                                    <span className="fs-6 fw-bold">Peso: <span className="fw-normal">{patient.peso} Kg</span></span>
                                                             </div>
                                                             <div id="c-datos" className="col p-3 px-4 offset-1">
                                                                 <span className="fs-6   fw-bold">Órdenes médicas: <span className="fs-6 fw-normal">Texto breve de las indicaciones proporcionadas por el médico</span></span>
@@ -366,6 +381,8 @@ function Page3 () {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="outline-danger" onClick={deletePatient}>Eliminar</Button>
+                    <Snackbar  ref={snackbarRef3} message="Se Elimino al Paciente Correctamente" type= "success"/>
+                    <Snackbar  ref={snackbarRef4} message="Error al eliminar Paciente" type= "fail"/>
                 </Modal.Footer>
             </Modal>
             </div>
