@@ -43,7 +43,7 @@ function Register () {
             setError("")
             setLoading(true)
             const res = await createUserWithEmailAndPassword(auth, email, password);
-            await setDoc(doc(db, "Medico", res.user.uid), { nombrePila: nombre, apellidoPaterno: aPaterno, apellidoMaterno: aMaterno, especialidad: especialidad, cedulaProfesional: cedulaProfesional, uid: res.user.uid});
+            await setDoc(doc(db, "Medico", res.user.uid), { nombrePila: nombre, apellidoPaterno: aPaterno, apellidoMaterno: aMaterno, titulo: especialidad, cedulaProfesional: cedulaProfesional, uid: res.user.uid});
             setShow(true);
         }
         catch {
